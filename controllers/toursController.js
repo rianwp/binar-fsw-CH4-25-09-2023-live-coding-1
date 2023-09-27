@@ -1,5 +1,7 @@
 const fs = require("fs")
 
+const Tour = require("../models/toursModel")
+
 const tours = JSON.parse(
   fs.readFileSync(
     `${__dirname}/../dev-data/data/tours-simple.json`
@@ -18,6 +20,51 @@ const checkId = (req, res, next, val) => {
     })
   }
   next()
+}
+
+const checkBody = (req, res, next) => {
+  if (!req.body.name || !req.body.price) {
+    return res.status(400).json({
+      status: "failed",
+      message: `name or price are required`,
+    })
+  }
+  next()
+}
+
+const createTourModel = async (req, res) => {
+  try {
+    const newTour = await Tour.create(req.body)
+    res.status(201).json({
+      status: "success",
+      data: {
+        tour: newTour,
+      },
+    })
+  } catch (err) {
+    res.status(400).json({
+      status: "failed",
+      message: "name or price are required",
+    })
+  }
+}
+
+const getAllToursModel = async (req, res) => {
+  try {
+    const tours = await Tour.find()
+    res.status(200).json({
+      status: "success",
+      length: tours.length,
+      data: {
+        tours,
+      },
+    })
+  } catch (err) {
+    res.status(400).json({
+      status: "failed",
+      message: err.message,
+    })
+  }
 }
 
 const getAllTours = (req, res) => {
@@ -127,4 +174,7 @@ module.exports = {
   createTour,
   removeTour,
   checkId,
+  createTourModel,
+  getAllToursModel,
+  checkBody,
 }

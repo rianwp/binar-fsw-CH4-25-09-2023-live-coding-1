@@ -6,8 +6,8 @@ router.param("id", tourController.checkId)
 
 router
   .route("/")
-  .get(tourController.getAllTours)
-  .post(tourController.createTour)
+  .get(tourController.getAllToursModel)
+  .post(tourController.createTourModel)
 
 router
   .route("/:id")
