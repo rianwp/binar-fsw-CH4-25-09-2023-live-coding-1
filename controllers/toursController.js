@@ -44,7 +44,7 @@ const createTourModel = async (req, res) => {
   } catch (err) {
     res.status(400).json({
       status: "failed",
-      message: "name or price are required",
+      message: err.message,
     })
   }
 }
@@ -63,6 +63,71 @@ const getAllToursModel = async (req, res) => {
     res.status(400).json({
       status: "failed",
       message: err.message,
+    })
+  }
+}
+
+const getTourByIdModel = async (req, res) => {
+  try {
+    const id = req.params.id
+    const tour = await Tour.findById(id)
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        tour,
+      },
+    })
+  } catch (err) {
+    res.status(404).json({
+      status: "failed",
+      message: `data with ${req.params.id} this not found`,
+    })
+  }
+}
+
+const editTourModel = async (req, res) => {
+  try {
+    const id = req.params.id
+    const updateTour =
+      await Tour.findByIdAndUpdate(id, req.body, {
+        new: true,
+      })
+    res.status(200).json({
+      status: "success",
+      data: {
+        tour: updateTour,
+      },
+    })
+  } catch (err) {
+    res.status(404).json({
+      status: "failed",
+      message: `data with ${req.params.id} this not found`,
+    })
+  }
+}
+
+const removeTourModel = async (req, res) => {
+  try {
+    const id = req.params.id
+    const removeTour =
+      await Tour.findByIdAndDelete(id)
+    if (!removeTour) {
+      return res.status(404).json({
+        status: "failed",
+        message: `data with ${id} this not found`,
+      })
+    }
+    res.status(200).json({
+      status: "success",
+      data: {
+        tour: null,
+      },
+    })
+  } catch (err) {
+    res.status(400).json({
+      status: "failed",
+      message: `data with ${req.params.id} this not found`,
     })
   }
 }
@@ -176,5 +241,8 @@ module.exports = {
   checkId,
   createTourModel,
   getAllToursModel,
+  getTourByIdModel,
+  editTourModel,
+  removeTourModel,
   checkBody,
 }
