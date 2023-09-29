@@ -6,13 +6,13 @@ const router = express.Router()
 
 router
   .route("/")
-  .get(tourController.getAllToursModel)
-  .post(tourController.createTourModel)
+  .get(tourController.getAllTours)
+  .post(tourController.createTour)
 
 router
   .route("/:id")
-  .get(tourController.getTourByIdModel)
-  .patch(tourController.editTourModel)
-  .delete(tourController.removeTourModel)
+  .get(tourController.getTourById)
+  .patch(tourController.editTour)
+  .delete(tourController.removeTour)
 
 module.exports = router
